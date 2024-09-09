@@ -21,12 +21,12 @@ class Task{
 
 
 let listTasks = Array();
-let index=0;
+let indexMax=0;
 
 function addTask(t)
 {
     listTasks.push(t);
-    index++;
+    indexMax++;
     savecookie();
     
 }
@@ -43,15 +43,15 @@ function getcookie()
     {
         listTasks = JSON.parse(cookie.replace("tareas=",""));
         if (listTasks.length>0)
-            index=listTasks[listTasks.length-1].Id+1;
+            indexMax=listTasks[listTasks.length-1].Id+1;
+        else
+            indexMax=0;
     }
 }
 
 function deleteTask(t)
 {
     listTasks=listTasks.filter(x=> x.Id!=t);
-    if (index>0) 
-        index--;
     savecookie();
     obtenerDiv();
 }
@@ -70,7 +70,7 @@ getcookie();
 
 const miBoton = document.getElementById('buttonAdd');
 miBoton.addEventListener('click', function() {
-  addTask(createTask(index,document.getElementById('exampleFormControlInput1').value));
+  addTask(createTask(indexMax,document.getElementById('exampleFormControlInput1').value));
   obtenerDiv();
 });
 
@@ -83,9 +83,14 @@ function obtenerDiv()
     let texto="";
     for (g=0;g<listTasks.length;g++)
     {
-        texto = texto + `<li class="list-group-item px-3 py-1 d-flex align-items-center flex-grow-1 border-0 bg-transparent">
-                        <p class="lead fw-normal mb-0">`
-        texto = texto + listTasks[g].Text+`</p><button class="buttonRemove"  onclick="deleteTask(` + listTasks[g].Id+ `)"   type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary">Borrar</button></li>`;
+        texto = texto + `<div class="pb-2">
+                            <div class="card">
+                             <div class="card-body">
+                             <div class="d-flex flex-row align-items-center">
+                             <li class="list-group-item px-3 py-1 d-flex align-items-center flex-grow-1 border-0 bg-transparent">
+                                <p class="form-control form-control-lg">`
+        texto = texto + listTasks[g].Text+`</p><div><button onclick="deleteTask(` + listTasks[g].Id+ `)"   type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-danger">Borrar</button></li>
+                                            </div></div></div></div></div>`;
     }
     const capa= document.getElementById('tareas');
     capa.innerHTML=texto;
